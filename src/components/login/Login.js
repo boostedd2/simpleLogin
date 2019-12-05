@@ -2,17 +2,23 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Typography, Button, Link} from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
+  },
+  loginContainer: {
+    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    height: "100vh",
   },
   loginTitle: {
     alignItems: "center",
@@ -24,6 +30,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     marginTop: "10px",
     width: "60vw",
+    maxWidth: "300px",
     "& > *": {
       marginTop: "20px",
     },
@@ -36,25 +43,76 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return(
     <div className={classes.root}>
-      <Typography className={classes.loginTitle} variant="h4">
-        Welcome to simpleLogin
-      </Typography>
-      <div className={classes.userLogin}>
-        <TextField label="Username" variant="outlined" />
-        <TextField label="Password" variant="outlined" />
+      <div className={classes.loginContainer}>
+        <Typography className={classes.loginTitle} variant="h4">
+          Welcome to simpleLogin
+        </Typography>
+        <div className={classes.userLogin}>
+          <TextField label="Username" variant="outlined" />
+          <TextField label="Password" variant="outlined" />
+        </div>
+        <Button className={classes.loginButton} variant="contained" color="primary">Sign In</Button>
+        <Typography variant="h6">
+          Not Registered?
+        </Typography>
+        <Typography variant="h6">
+          <Link href="#" onClick={handleClickOpen}>
+            Sign Up
+          </Link>
+        </Typography>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please fill out your info below to create an account.
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              id="name"
+              label="Username"
+              type="text"
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              id="name"
+              label="New Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              id="name"
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
-      <Button className={classes.loginButton} variant="contained" color="primary">Sign In</Button>
-      <Typography variant="h6">
-        Not Registered?
-      </Typography>
-      <Typography variant="h6">
-        <Link href="#">
-          Sign Up
-        </Link>
-      </Typography>
     </div>
   )
 }
