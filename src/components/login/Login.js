@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Typography, Button, Link} from '@material-ui/core';
@@ -41,9 +42,24 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Login() {
+export default function Login(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [uname, setUName] = useState('')
+  const [uemail, setUEmail] = useState('')
+  const [upassword, setUPassword] = useState('')
+  const [cpassword, setCPassword] = useState('')
+
+  const userCreationPayload = {
+    "name": uname,
+    "email": uemail,
+    "password": upassword
+  }
+
+  const attemptUserCreation = () => {
+    axios.post('http://localhost:3000/api/user/register', userCreationPayload,
+    {headers: {"Content-Type": "application/json"}})
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,10 +97,20 @@ export default function Login() {
             <TextField
               margin="dense"
               id="name"
+              label="Email"
+              type="email"
+              variant="outlined"
+              fullWidth
+              onChange={event => setUEmail(event.target.value)}
+            />
+            <TextField
+              margin="dense"
+              id="name"
               label="Username"
               type="text"
               variant="outlined"
               fullWidth
+              onChange={event => setUName(event.target.value)}
             />
             <TextField
               margin="dense"
@@ -93,6 +119,7 @@ export default function Login() {
               type="password"
               variant="outlined"
               fullWidth
+              onChange={event => setUPassword(event.target.value)}
             />
             <TextField
               margin="dense"
@@ -101,13 +128,14 @@ export default function Login() {
               type="password"
               variant="outlined"
               fullWidth
+              onChange={event => setCPassword(event.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={() => attemptUserCreation()} color="primary">
               Confirm
             </Button>
           </DialogActions>
