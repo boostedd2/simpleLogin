@@ -45,10 +45,14 @@ const useStyles = makeStyles(theme => ({
 export default function Login(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  //create user info
   const [uname, setUName] = useState('')
   const [uemail, setUEmail] = useState('')
   const [upassword, setUPassword] = useState('')
   const [cpassword, setCPassword] = useState('')
+  //user login info
+  const [loginuname, setLoginUName] = useState('')
+  const [loginpass, setLoginPass] = useState('')
 
   const userCreationPayload = {
     "name": uname,
@@ -57,8 +61,39 @@ export default function Login(props) {
   }
 
   const attemptUserCreation = () => {
-    axios.post('http://localhost:3000/api/user/register', userCreationPayload,
+    if (upassword !== cpassword) {
+      document.getElementById("helpText").innerHTML = "Passwords do not match!";
+      document.getElementById("helpText").style.color = "red";
+    } else {
+        axios.post('http://192.168.1.17:3000/api/user/register', userCreationPayload,
+        {headers: {"Content-Type": "application/json"}})
+        .then(res => {
+          document.getElementById("userCreationSuccess").style.display = "block";
+          handleClose()
+        })
+        .catch(err => {
+          document.getElementById("helpText").innerHTML = err.response.data;
+          document.getElementById("helpText").style.color = "red";
+        })
+    }
+  }
+
+  const userLoginPayload = {
+    "email": loginuname,
+    "password": loginpass
+  }
+
+  const attemptUserLogin = () => {
+    axios.post('http://192.168.1.17:3000/api/user/login', userLoginPayload,
     {headers: {"Content-Type": "application/json"}})
+    .then(res => {
+      console.log(res)
+    })
+    .catch(err => {
+      console.log(err)
+      //document.getElementById("helpText").innerHTML = err.response.data;
+      //document.getElementById("helpText").style.color = "red";
+    })
   }
 
   const handleClickOpen = () => {
@@ -75,11 +110,25 @@ export default function Login(props) {
         <Typography className={classes.loginTitle} variant="h4">
           Welcome to simpleLogin
         </Typography>
+        <Typography id="userCreationSuccess" style={{display: "none", background:"#d0ffc2", borderRadius: "5px", padding: "5px"}} variant="h6">
+          User created, please sign in below.
+        </Typography>
         <div className={classes.userLogin}>
-          <TextField label="Username" variant="outlined" />
-          <TextField label="Password" variant="outlined" />
+          <TextField 
+            label="Email"
+            type="email"
+            variant="outlined"
+            onChange={event => setLoginUName(event.target.value)}
+             />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            onChange={event => setLoginPass(event.target.value)}
+             />
         </div>
-        <Button className={classes.loginButton} variant="contained" color="primary">Sign In</Button>
+        <Button className={classes.loginButton} variant="contained" color="primary" onClick={() => attemptUserLogin()}>Sign In</Button>
+        <Typography id="userLoginSuccess" style={{display: "none", background:"#ffbfb5", borderRadius: "5px", padding: "5px"}} variant="h6"></Typography>
         <Typography variant="h6">
           Not Registered?
         </Typography>
@@ -91,8 +140,8 @@ export default function Login(props) {
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Please fill out your info below to create an account.
+            <DialogContentText id="helpText">
+              Please fill out your info below to create an account. (Real Email address not required, data retrieved will be deleted.)
             </DialogContentText>
             <TextField
               margin="dense"
