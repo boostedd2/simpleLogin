@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Login(props) {
+export default function Login({authToken, setAuthToken}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   //create user info
@@ -65,7 +65,7 @@ export default function Login(props) {
       document.getElementById("helpText").innerHTML = "Passwords do not match!";
       document.getElementById("helpText").style.color = "red";
     } else {
-        axios.post('http://192.168.1.17:3000/api/user/register', userCreationPayload,
+        axios.post('http://192.168.1.12:3000/api/user/register', userCreationPayload,
         {headers: {"Content-Type": "application/json"}})
         .then(res => {
           document.getElementById("userCreationSuccess").style.display = "block";
@@ -83,16 +83,18 @@ export default function Login(props) {
     "password": loginpass
   }
 
-  const attemptUserLogin = () => {
-    axios.post('http://192.168.1.17:3000/api/user/login', userLoginPayload,
+  const attemptUserLogin = (props) => {
+    axios.post('http://192.168.1.12:3000/api/user/login', userLoginPayload,
     {headers: {"Content-Type": "application/json"}})
     .then(res => {
-      console.log(res)
+      setAuthToken(res.data)
+      console.log(authToken)
+      this.props.router.push("/welcome")
     })
     .catch(err => {
       console.log(err)
-      //document.getElementById("helpText").innerHTML = err.response.data;
-      //document.getElementById("helpText").style.color = "red";
+      document.getElementById("userLoginSuccess").style.display = "block";
+      document.getElementById("userLoginSuccess").innerHTML = err;
     })
   }
 
