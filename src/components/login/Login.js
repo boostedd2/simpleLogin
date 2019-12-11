@@ -66,7 +66,7 @@ const Login = withRouter(({history, authToken, setAuthToken}) => {
       document.getElementById("helpText").innerHTML = "Passwords do not match!";
       document.getElementById("helpText").style.color = "red";
     } else {
-        axios.post('http://192.168.1.17:3000/api/user/register', userCreationPayload,
+        axios.post('http://192.168.1.12:3000/api/user/register', userCreationPayload,
         {headers: {"Content-Type": "application/json"}})
         .then(res => {
           document.getElementById("userCreationSuccess").style.display = "block";
@@ -85,7 +85,7 @@ const Login = withRouter(({history, authToken, setAuthToken}) => {
   }
 
   const attemptUserLogin = () => {
-    axios.post('http://192.168.1.17:3000/api/user/login', userLoginPayload,
+    axios.post('http://192.168.1.12:3000/api/user/login', userLoginPayload,
     {headers: {"Content-Type": "application/json"}})
     .then(res => {
       setAuthToken(res.data)

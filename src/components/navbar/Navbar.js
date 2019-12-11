@@ -23,7 +23,7 @@ export default function Navbar() {
             simpleLogin
           </Typography>
           <VpnKeyIcon fontSize="large" style={{color: "black", marginLeft: "10px"}}/>
-          <GitHubIcon fontSize="large" style={{color: "black", marginLeft: "auto"}}/>
+          <a style={{color: "black", marginLeft: "auto"}} href="https://github.com/boostedd2/simpleLogin"><GitHubIcon fontSize="large" /></a>
         </Toolbar>
       </AppBar>
     </div>
